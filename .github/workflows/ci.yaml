@@ -1,0 +1,42 @@
+name: CI de Testes Automatizados
+
+# Define os gatilhos (triggers) da pipeline
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch: # Permite a execução manual pelo painel do GitHub Actions
+  schedule:
+    - cron: '0 8 * * 1-5' # Execução agendada: Segunda a Sexta às 08:00 UTC
+
+jobs:
+  executar-testes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Versão recomendada para projetos Node/Cypress
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Executar testes automatizados
+        run: npm run test
+        # O comando acima deve estar configurado no seu package.json.
+        # Certifique-se de que a biblioteca de relatórios (como o mochawesome) 
+        # é chamada durante essa execução.
+
+      - name: Publicar relatório de testes
+        uses: actions/upload-artifact@v4
+        if: always() # Garante a publicação do relatório mesmo que algum teste falhe
+        with:
+          name: relatorio-de-testes
+          # Ajuste o caminho abaixo para a pasta exata onde seus relatórios são gerados
+          path: mochawesome-report/ 
+          retention-days: 15
