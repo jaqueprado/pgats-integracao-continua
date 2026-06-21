@@ -8,7 +8,7 @@ on:
       - master
   workflow_dispatch: # Permite a execução manual pelo painel do GitHub Actions
   schedule:
-    - cron: '0 8 * * 1-5' # Execução agendada: Segunda a Sexta às 08:00 UTC
+    - cron: '0 18 * * *' # Execução agendada: Segunda a Sexta às 08:00 UTC
 
 jobs:
   executar-testes:
